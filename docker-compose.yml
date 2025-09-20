@@ -1,0 +1,20 @@
+services:
+  kitsu:
+    build: .  # 🔄 이 미 지  대 신  로 컬 에 서  직 접  빌 드
+    container_name: kitsu
+    networks:
+      - traefik_default
+    environment:
+      - ADDON_URL=http://hspki1.duckdns.org
+      - FANART_APIKEY=1ab9fadecde8115ed16e0adfcfdcf485
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kitsu.rule=Host(`hspki1.duckdns.org`)"
+      - "traefik.http.routers.kitsu.entrypoints=web,websecure"
+      - "traefik.http.routers.kitsu.tls=true"
+      - "traefik.http.routers.kitsu.tls.certresolver=production"
+      - "traefik.http.services.kitsu.loadbalancer.server.port=7000"
+    restart: unless-stopped
+networks:
+  traefik_default:
+    external: true
